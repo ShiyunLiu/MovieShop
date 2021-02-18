@@ -1,0 +1,11 @@
+﻿@model MovieShop.Core.Models.Response.MovieCardResponseModel
+
+@*when u click on the poster go to MovieController, Details action method and send movie id*@
+
+<div class="card mb-4 shadow bg-light">
+    <a asp-controller="Movies" asp-action="Details" asp-route-id="@Model.Id">
+        <img src="@Model.PosterUrl" alt="@Model.Title" />
+    </a>
+</div>
+
+
