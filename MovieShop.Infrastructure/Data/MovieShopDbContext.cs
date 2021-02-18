@@ -25,6 +25,7 @@ namespace MovieShop.Infrastructure.Data
 
         public DbSet<MovieCast> MovieCasts { get; set; }
 
+
         //Fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,6 +36,8 @@ namespace MovieShop.Infrastructure.Data
             modelBuilder.Entity<Role>(ConfigureRole);
             modelBuilder.Entity<Cast>(ConfigureCast);
             modelBuilder.Entity<Favorite>(ConfigureFavorite);
+            modelBuilder.Entity<Purchase>(ConfigurePurchase);
+            modelBuilder.Entity<Review>(ConfigureReview);
 
             modelBuilder.Entity<MovieCast>(ConfigureMoveCast);
 
@@ -55,7 +58,21 @@ namespace MovieShop.Infrastructure.Data
             //    m => m.HasOne<Cast>().WithMany().HasForeignKey("CastId"),
             //    c => c.HasOne<Movie>().WithMany().HasForeignKey("MovieId"));
         }
-
+        private void ConfigureReview(EntityTypeBuilder<Review> builder)
+        {
+            builder.ToTable("Review");
+            builder.HasKey(r => new { r.MovieId, r.UserId });
+            builder.Property(r => r.ReviewText).HasMaxLength(20000);
+            builder.Property(r => r.Rating).HasColumnType("decimal(3, 2)");
+        }
+        private void ConfigurePurchase(EntityTypeBuilder<Purchase> builder)
+        {
+            builder.ToTable("Purchase");
+            builder.HasKey(p => p.Id);
+            builder.Property(p => p.Id).ValueGeneratedOnAdd();
+            builder.Property(p => p.PurchaseNumber).ValueGeneratedOnAdd();
+            builder.HasIndex(p => new { p.UserId, p.MovieId }).IsUnique();
+        }
         private void ConfigureMoveCast(EntityTypeBuilder<MovieCast> builder)
         {
             builder.ToTable("MovieCast");
