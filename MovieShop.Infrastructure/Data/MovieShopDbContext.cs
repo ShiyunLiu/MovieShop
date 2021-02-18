@@ -23,6 +23,8 @@ namespace MovieShop.Infrastructure.Data
         public DbSet<Cast> Casts { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
 
+        public DbSet<MovieCast> MovieCasts { get; set; }
+
         //Fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +36,8 @@ namespace MovieShop.Infrastructure.Data
             modelBuilder.Entity<Cast>(ConfigureCast);
             modelBuilder.Entity<Favorite>(ConfigureFavorite);
 
+            modelBuilder.Entity<MovieCast>(ConfigureMoveCast);
+
             modelBuilder.Entity<Movie>().HasMany(m => m.Genres).WithMany(g => g.Movies)
                 .UsingEntity<Dictionary<string, object>>("MovieGenre",
                 m => m.HasOne<Genre>().WithMany().HasForeignKey("GenreId"),
@@ -44,11 +48,23 @@ namespace MovieShop.Infrastructure.Data
                 u => u.HasOne<Role>().WithMany().HasForeignKey("RoleId"),
                 r => r.HasOne<User>().WithMany().HasForeignKey("UserId"));
 
+
+
             //modelBuilder.Entity<Movie>().HasMany(m => m.Casts).WithMany(c => c.Movies)
             //    .UsingEntity<Dictionary<string, object>>("MovieCast",
             //    m => m.HasOne<Cast>().WithMany().HasForeignKey("CastId"),
             //    c => c.HasOne<Movie>().WithMany().HasForeignKey("MovieId"));
         }
+
+        private void ConfigureMoveCast(EntityTypeBuilder<MovieCast> builder)
+        {
+            builder.ToTable("MovieCast");
+            builder.HasKey(mc => new { mc.CastId, mc.MovieId, mc.Character });
+            builder.HasOne(mc => mc.Movie).WithMany(mc => mc.MovieCasts).HasForeignKey(mc => mc.MovieId);
+            builder.HasOne(mc => mc.Cast).WithMany(mc => mc.MovieCasts).HasForeignKey(mc => mc.CastId);
+
+        }
+
         private void ConfigureMovie(EntityTypeBuilder<Movie> builder)
         {
             //give rules to Movie table
@@ -103,7 +119,7 @@ namespace MovieShop.Infrastructure.Data
         private void ConfigureFavorite(EntityTypeBuilder<Favorite> builder)
         {
             builder.ToTable("Favoirte");
-            builder.HasKey(f => f.Id);
+            builder.HasKey(f => new { f.MovieId, f.UserId });
         }
     }
 }

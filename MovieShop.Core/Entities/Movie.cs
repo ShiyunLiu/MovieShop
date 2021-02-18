@@ -25,10 +25,9 @@ namespace MovieShop.Core.Entities
         public string UpdatedBy { get; set; }
         public string CreatedBy { get; set; }
         
-        //Navigation Property
+        
         public ICollection<Trailer> Trailers { get; set; }
         public ICollection<Genre> Genres { get; set; }
-        //public ICollection<Favorite> Favorites { get; set; }
-        public ICollection<Cast> Casts { get; set; }
+        public ICollection<MovieCast> MovieCasts { get; set; }
     }
 }

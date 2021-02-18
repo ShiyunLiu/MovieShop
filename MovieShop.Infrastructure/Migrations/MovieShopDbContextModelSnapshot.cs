@@ -62,22 +62,15 @@ namespace MovieShop.Infrastructure.Migrations
 
             modelBuilder.Entity("MovieShop.Core.Entities.Favorite", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("MovieIdId")
+                    b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserIdId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("MovieId", "UserId");
 
-                    b.HasIndex("MovieIdId");
-
-                    b.HasIndex("UserIdId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Favoirte");
                 });
@@ -171,6 +164,24 @@ namespace MovieShop.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Movie");
+                });
+
+            modelBuilder.Entity("MovieShop.Core.Entities.MovieCast", b =>
+                {
+                    b.Property<int>("CastId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Character")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CastId", "MovieId", "Character");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("MovieCast");
                 });
 
             modelBuilder.Entity("MovieShop.Core.Entities.Role", b =>
@@ -300,17 +311,40 @@ namespace MovieShop.Infrastructure.Migrations
 
             modelBuilder.Entity("MovieShop.Core.Entities.Favorite", b =>
                 {
-                    b.HasOne("MovieShop.Core.Entities.Movie", "MovieId")
+                    b.HasOne("MovieShop.Core.Entities.Movie", "Movie")
+                        .WithMany()
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MovieShop.Core.Entities.User", "User")
                         .WithMany("Favorites")
-                        .HasForeignKey("MovieIdId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MovieShop.Core.Entities.User", "UserId")
-                        .WithMany("Favorites")
-                        .HasForeignKey("UserIdId");
+                    b.Navigation("Movie");
 
-                    b.Navigation("MovieId");
+                    b.Navigation("User");
+                });
 
-                    b.Navigation("UserId");
+            modelBuilder.Entity("MovieShop.Core.Entities.MovieCast", b =>
+                {
+                    b.HasOne("MovieShop.Core.Entities.Cast", "Cast")
+                        .WithMany("MovieCasts")
+                        .HasForeignKey("CastId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MovieShop.Core.Entities.Movie", "Movie")
+                        .WithMany("MovieCasts")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cast");
+
+                    b.Navigation("Movie");
                 });
 
             modelBuilder.Entity("MovieShop.Core.Entities.Trailer", b =>
@@ -339,9 +373,14 @@ namespace MovieShop.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MovieShop.Core.Entities.Cast", b =>
+                {
+                    b.Navigation("MovieCasts");
+                });
+
             modelBuilder.Entity("MovieShop.Core.Entities.Movie", b =>
                 {
-                    b.Navigation("Favorites");
+                    b.Navigation("MovieCasts");
 
                     b.Navigation("Trailers");
                 });
