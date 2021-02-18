@@ -4,6 +4,7 @@ using System.Text;
 
 namespace MovieShop.Core.Entities
 {
-   public class Purchase
+    public class Purchase
     {
     }
+}
