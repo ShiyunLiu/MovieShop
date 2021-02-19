@@ -22,10 +22,10 @@ namespace MovieShop.MVC.Controllers
             _movieService = movieService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             // get the movies from movie service and send those list of movies to the View
-            var topMovies = _movieService.GetTop25GrossingMovies();
+            var topMovies = await _movieService.GetTop25GrossingMovies();
             // ViewBag, ViewData and Models
             return View(topMovies);
         }

@@ -1,0 +1,8 @@
+﻿@model IEnumerable<MovieShop.Core.Entities.Genre>
+
+@foreach (var genre in Model)
+{
+    <a class="dropdown-item" asp-controller="Movies" asp-action="genre" asp-route-id="@genre.Id">
+        @genre.Name
+    </a>
+}

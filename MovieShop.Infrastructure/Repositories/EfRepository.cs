@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MovieShop.Core.RepositoryInterfaces;
 using MovieShop.Infrastructure.Data;
@@ -16,59 +17,59 @@ namespace MovieShop.Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
-        public virtual T AddAsync(T entity) // make all the methods virtural: we can override those methods in other repositories(e.g.: MovieRepository) if necessary
+        public virtual async Task<T> AddAsync(T entity) // make all the methods virtural: we can override those methods in other repositories(e.g.: MovieRepository) if necessary
         {
             _dbContext.Set<T>().Add(entity);
-            _dbContext.SaveChanges(); // Add, Update and Delete must have this method
+            await _dbContext.SaveChangesAsync(); // Add, Update and Delete must have this method
             return entity;
         }
 
-        public virtual T DeleteAsync(T entity)
+        public virtual async Task<T> DeleteAsync(T entity)
         {
             _dbContext.Remove(entity);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return entity;
         }
 
-        public virtual T GetByIdAsync(int id)
+        public virtual async Task<T> GetByIdAsync(int id)
         {
-            var entity = _dbContext.Set<T>().Find(id);
+            var entity = await _dbContext.Set<T>().FindAsync(id);
             return entity;
         }
 
-        public virtual int GetCountAsync(Expression<Func<T, bool>> filter = null)
+        public virtual async Task<int> GetCountAsync(Expression<Func<T, bool>> filter = null)
         {
             if (filter != null)
             {
-                return _dbContext.Set<T>().Where(filter).Count();
+                return await _dbContext.Set<T>().Where(filter).CountAsync();
             }
-            return _dbContext.Set<T>().Count();
+            return await _dbContext.Set<T>().CountAsync();
         }
 
-        public virtual bool GetExistingAsync(Expression<Func<T, bool>> filter = null)
+        public virtual async Task<bool> GetExistingAsync(Expression<Func<T, bool>> filter = null)
         {
             if (filter != null)
             {
-                return _dbContext.Set<T>().Where(filter).Any();
+                return await _dbContext.Set<T>().Where(filter).AnyAsync();
             }
             return false;
         }
 
-        public virtual IEnumerable<T> ListAllAsync()
+        public virtual async Task<IEnumerable<T>> ListAllAsync()
         {
-            return _dbContext.Set<T>().ToList();
+            return await _dbContext.Set<T>().ToListAsync();
         }
 
-        public virtual IEnumerable<T> ListAsync(Expression<Func<T, bool>> filter)
+        public virtual async Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> filter)
         {
-            var filteredList = _dbContext.Set<T>().Where(filter).ToList();
+            var filteredList = await _dbContext.Set<T>().Where(filter).ToListAsync();
             return filteredList;
         }
 
-        public virtual T UpdateAsync(T entity)
+        public virtual async Task<T> UpdateAsync(T entity)
         {
             _dbContext.Entry(entity).State = EntityState.Modified; // will look for primary key and update the corresponding record
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return entity;
         }
     }

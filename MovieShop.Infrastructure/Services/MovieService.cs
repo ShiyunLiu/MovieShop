@@ -6,6 +6,7 @@ using MovieShop.Core.ServiceInterfaces;
 using MovieShop.Infrastructure.Repositories;
 using MovieShop.Core.RepositoryInterfaces;
 using MovieShop.Core.Models.Response;
+using System.Threading.Tasks;
 
 namespace MovieShop.Infrastructure.Services
 {
@@ -19,20 +20,52 @@ namespace MovieShop.Infrastructure.Services
             _movieRepository = movieRepository; // 
         }
 
-        public MovieDetailsResponseModel GetMovieById(int id)
+        public async Task<MovieDetailsResponseModel> GetMovieById(int id)
         {
             var movieDetails = new MovieDetailsResponseModel();
-            var movie = _movieRepository.GetByIdAsync(id);
+            var movie = await _movieRepository.GetByIdAsync(id);
 
             // map movie entity to MovieDetailsResponseModel
             movieDetails.Id = movie.Id;
+            movieDetails.PosterUrl = movie.PosterUrl;
+            movieDetails.Title = movie.Title;
+            movieDetails.Overview = movie.Overview;
+            movieDetails.Tagline = movie.Tagline;
+            movieDetails.Budget = movie.Budget;
+            movieDetails.Revenue = movie.Revenue;
+            movieDetails.ImdbUrl = movie.ImdbUrl;
+            movieDetails.TmdbUrl = movie.TmdbUrl;
+            movieDetails.BackdropUrl = movie.BackdropUrl;
+            movieDetails.OriginalLanguage = movie.OriginalLanguage;
+            movieDetails.ReleaseDate = movie.ReleaseDate;
+            movieDetails.RunTime = movie.RunTime;
+            movieDetails.Price = movie.Price;
+
+            movieDetails.Genres = new List<GenreModel>();
+            movieDetails.Casts = new List<CastResponseModel>();
+
+            foreach (var genre in movie.Genres)
+            {
+                movieDetails.Genres.Add(new GenreModel { Id = genre.Id, Name = genre.Name });
+            }
+
+            foreach (var cast in movie.MovieCasts)
+            {
+                movieDetails.Casts.Add(new CastResponseModel
+                {
+                    Id = cast.CastId,
+                    Character = cast.Character,
+                    Name = cast.Cast.Name,
+                    ProfilePath = cast.Cast.ProfilePath
+                });
+            }
 
             return movieDetails;
         }
 
-        public IEnumerable<MovieCardResponseModel> GetTop25GrossingMovies()
+        public async Task< IEnumerable<MovieCardResponseModel>> GetTop25GrossingMovies()
         {
-            var movies = _movieRepository.GetTopRevenueMovies();
+            var movies = await _movieRepository.GetTopRevenueMovies();
             var movieCardResponseModel = new List<MovieCardResponseModel>();
             foreach (var movie in movies)
             {

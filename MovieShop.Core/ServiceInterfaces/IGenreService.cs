@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MovieShop.Core.ServiceInterfaces
 {
-   public interface IGenreService
+    public interface IGenreService
     {
-        IEnumerable<Genre> GetAllGenres();
+        Task<IEnumerable<Genre>> GetAllGenres();
     }
 }
