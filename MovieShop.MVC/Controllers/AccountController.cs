@@ -79,6 +79,12 @@ namespace MovieShop.MVC.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Login");
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register(UserRegisterRequestModel requestModel)
         {
