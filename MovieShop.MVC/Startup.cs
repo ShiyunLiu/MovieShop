@@ -15,6 +15,7 @@ using MovieShop.Core.ServiceInterfaces;
 using MovieShop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using MovieShop.Core.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace MovieShop.MVC
 {
@@ -42,41 +43,52 @@ namespace MovieShop.MVC
             services.AddTransient<IAsyncRepository<Genre>, EfRepository<Genre>>();
 
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IUserService , UserService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICryptoService, CryptoService>();
 
             services.AddDbContext<MovieShopDbContext>(option =>
                 option.UseSqlServer(Configuration.GetConnectionString("MovieShopDbConnection")));
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
+                option =>
+                {
+                    option.Cookie.Name = "MoviShopAuthCookie";
+                    option.ExpireTimeSpan = TimeSpan.FromHours(2);
+                    option.LoginPath = "/Account/login";
+                }
+                );
         }
 
-            // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-            //
-            public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        //
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
             {
-                if (env.IsDevelopment())
-                {
-                    app.UseDeveloperExceptionPage();
-                }
-                else
-                {
-                    app.UseExceptionHandler("/Home/Error");
-                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                    app.UseHsts();
-                }
-                // following are the built-in middlewaares, linked by .next() methods. The orders matter.
-                app.UseHttpsRedirection();
-                app.UseStaticFiles();
-
-                app.UseRouting();
-
-                app.UseAuthorization();
-
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{controller=Home}/{action=Index}/{id?}");
-                });
+                app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+            // following are the built-in middlewaares, linked by .next() methods. The orders matter.
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
+    }
 }

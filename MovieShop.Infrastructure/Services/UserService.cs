@@ -1,6 +1,7 @@
 ﻿using MovieShop.Core.Entities;
 using MovieShop.Core.Exceptions;
 using MovieShop.Core.Models.Request;
+using MovieShop.Core.Models.Response;
 using MovieShop.Core.RepositoryInterfaces;
 using MovieShop.Core.ServiceInterfaces;
 using System;
@@ -52,6 +53,38 @@ namespace MovieShop.Infrastructure.Services
                 return true;
             }
             return false;
+        }
+
+        public async Task<LoginResponseModel> ValidateUser(LoginRequestModel loginRequestModel)
+        {
+            var dbUser = await _userRepository.GetUserByEmail(loginRequestModel.Email);
+
+            if (dbUser == null)
+            {
+                return null;
+            }
+
+            var hashedPassword = _cryptoService.HashPassword(loginRequestModel.Password, dbUser.Salt);
+
+            if (hashedPassword == dbUser.HashedPassword)
+            {
+                // User has entered correct password
+
+                var loginResponse = new LoginResponseModel
+                {
+                    Id = dbUser.Id,
+                    Email = dbUser.Email,
+                    FirstName = dbUser.FirstName,
+                    LastName = dbUser.LastName,
+                    DateOfBirth = dbUser.DateOfBirth
+
+                };
+
+                return loginResponse;
+            }
+
+            return null;
+
         }
     }
 }
