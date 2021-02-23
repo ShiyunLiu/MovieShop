@@ -24,5 +24,6 @@ namespace MovieShop.Core.RepositoryInterfaces
 
         //Delete
         Task<T> DeleteAsync(T entity);
+        
     }
 }

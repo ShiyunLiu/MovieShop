@@ -29,7 +29,14 @@
                 <div class="col-4 text-secondary font-weight-bold mt-2">
                     @Model.RunTime m | @Model.ReleaseDate.Value.Date.Year
                 </div>
-                <div class="col-8">
+                <div class="col-8 bg-dark text-white">
+
+                        @foreach (var genre in Model.Genres)
+                        {
+                            <a class="badge badge-pill badge-dark ml-1" asp-action="Genre" asp-route-id="@genre.Id">
+                                @genre.Name
+                            </a>
+                        }
                 </div>
             </div>
 
@@ -78,37 +85,60 @@
         <h5>MOVIE FACTS</h5>
         <hr>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item align-items-center">
+            <li class="list-group-item">
                 Release Date
                 <span class="badge badge-pill badge-dark">@Model.ReleaseDate.Value.ToShortDateString()</span>
             </li>
 
-            <li class="list-group-item align-items-center">
+            <li class="list-group-item">
                 Run Time
                 <span class="badge badge-pill badge-dark">@Model.RunTime.Value m</span>
             </li>
-            <li class="list-group-item align-items-center">
+            <li class="list-group-item">
                 Box Office
                 <span class="badge badge-pill badge-pill badge-dark">
                     @Model.Revenue?.ToString("C0")
                 </span>
             </li>
 
-            <li class="list-group-item align-items-center">
+            <li class="list-group-item">
                 Budget
                 <span class="badge badge-pill badge-dark">
                     @Model.Budget?.ToString("C0")
                 </span>
             </li>
 
-            <li class="list-group-item align-items-center">
+            <li class="list-group-item">
                 Return to Home Page
-                <a href="@Model.ImdbUrl"
-                   class="text-dark ml-3"
-                   target="_blank">
-                </a>
             </li>
 
         </ul>
+    </div>
+
+    <div class="col-4 offset-1">
+        <h5>CAST</h5>
+
+        <table class="table">
+
+            <tbody>
+
+
+                @foreach (var cast in Model?.Casts)
+                {
+                    <tr>
+                        <td>
+                            <img src="@cast.ProfilePath"
+                                 class="cast-small-img rounded-circle"
+                                 alt="@cast.Name" >
+                        </td>
+                        <td> @cast.Name </td>
+                        <td> @cast.Character</td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+
     </div>
 </div>

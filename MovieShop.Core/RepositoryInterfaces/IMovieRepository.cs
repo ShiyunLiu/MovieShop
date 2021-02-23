@@ -8,7 +8,7 @@ namespace MovieShop.Core.RepositoryInterfaces
 {
     public interface IMovieRepository : IAsyncRepository<Movie>
     {
-       Task<IEnumerable<Movie>>  GetTopRatedMovies();
+        Task<IEnumerable<Movie>> GetTopRatedMovies();
         Task<IEnumerable<Movie>> GetTopRevenueMovies();
     }
 }

@@ -1,0 +1,63 @@
+﻿@model MovieShop.Core.Models.Request.UserRegisterRequestModel
+
+
+<h3>
+    Register User
+</h3>
+
+<hr />
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <form asp-action="Register">
+            <div class="form-group">
+                <label class="control-label" asp-for="Email"> Email</label>
+                <input class="form-control" asp-for="Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="Password"> Password</label>
+                <input class="form-control" asp-for="Password" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" asp-for="RePassword"> Password</label>
+                <input class="form-control" asp-for="RePassword" type="password" />
+                <span asp-validation-for="RePassword" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="LastName"> Last Name</label>
+                <input class="form-control" asp-for="LastName" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="FirstName"> First Name</label>
+                <input class="form-control" asp-for="FirstName" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="DateOfBirth"> Date Of Birth</label>
+                <input class="form-control" asp-for="DateOfBirth" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+
+            </div>
+
+            <div>
+                <input type="submit" name="registerButton" value="Register" class="btn btn-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
