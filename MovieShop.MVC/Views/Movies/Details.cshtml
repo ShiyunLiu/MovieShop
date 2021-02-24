@@ -5,18 +5,18 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="bg-dark w-100")">
+<div class="bg-dark w-100" )">
 
     <div class="row">
         <div class="col">
             <div>
-                <img src="@Model.PosterUrl" alt="@Model.Title"/>
+                <img src="@Model.PosterUrl" alt="@Model.Title" />
             </div>
 
         </div>
         <div class="col-md-6">
             <div class="row mt-2">
-                <div class="col-12" >
+                <div class="col-12">
                     <h1 class="text-white text-center">
                         @Model.Title
                     </h1>
@@ -31,12 +31,12 @@
                 </div>
                 <div class="col-8 bg-dark text-white">
 
-                        @foreach (var genre in Model.Genres)
-                        {
-                            <a class="badge badge-pill badge-dark ml-1" asp-action="Genre" asp-route-id="@genre.Id">
-                                @genre.Name
-                            </a>
-                        }
+                    @foreach (var genre in Model.Genres)
+                    {
+                        <a class="badge badge-pill badge-dark ml-1" asp-action="Genre" asp-route-id="@genre.Id">
+                            @genre.Name
+                        </a>
+                    }
                 </div>
             </div>
 
@@ -65,13 +65,13 @@
                 </li>
 
                 <li class="list-group-item">
-                    <button type="button" class="btn btn-outline-dark btn-light btn-lg btn-block btn-sm" data-toggle="modal" data-target="#buyMovieModal">
+                    <a class="btn btn-outline-dark btn-light btn-lg btn-block btn-sm" asp-route-id="@Model.Id" asp-controller="User" asp-action="BuyMovie">
                         BUY @Model.Price
-                    </button>
+                    </a>
 
-                    <button type="button" class="btn btn-outline-dark btn-light btn-lg btn-block btn-sm">
+                    <a  class="btn btn-outline-dark btn-light btn-lg btn-block btn-sm">
                         WATCH MOVIE
-                    </button>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -129,7 +129,7 @@
                         <td>
                             <img src="@cast.ProfilePath"
                                  class="cast-small-img rounded-circle"
-                                 alt="@cast.Name" >
+                                 alt="@cast.Name">
                         </td>
                         <td> @cast.Name </td>
                         <td> @cast.Character</td>

@@ -46,6 +46,12 @@ namespace MovieShop.Infrastructure.Services
 
         public bool IsSuperAdmin => throw new NotImplementedException();
 
-        public int UserId => throw new NotImplementedException();
+        public int UserId => GetUserId();
+
+        private int GetUserId()
+        {
+            var userId = Convert.ToInt32(  _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+            return userId;
+        }
     }
 }

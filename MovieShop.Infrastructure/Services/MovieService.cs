@@ -63,6 +63,24 @@ namespace MovieShop.Infrastructure.Services
             return movieDetails;
         }
 
+
+        public async Task<IEnumerable<ReviewResponseModel>> GetReviewsForMovie(int id)
+        {
+                var reviews = await _movieRepository.GetMovieReviews(id);
+                var reviewDetails = new List<ReviewResponseModel>();
+                foreach (var review in reviews)
+                {
+                    reviewDetails.Add(new ReviewResponseModel
+                    {
+                        UserId = review.UserId,
+                        MovieId = review.MovieId,
+                        Rating = review.Rating,
+                        ReviewText = review.ReviewText
+                    });
+                }
+                return reviewDetails;
+        }
+
         public async Task< IEnumerable<MovieCardResponseModel>> GetTop25GrossingMovies()
         {
             var movies = await _movieRepository.GetTopRevenueMovies();

@@ -22,9 +22,9 @@ namespace MovieShop.Infrastructure.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<Cast> Casts { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
-
         public DbSet<MovieCast> MovieCasts { get; set; }
-
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Purchase> Purchases { get; set; }
 
         //Fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -51,12 +51,6 @@ namespace MovieShop.Infrastructure.Data
                 u => u.HasOne<Role>().WithMany().HasForeignKey("RoleId"),
                 r => r.HasOne<User>().WithMany().HasForeignKey("UserId"));
 
-
-
-            //modelBuilder.Entity<Movie>().HasMany(m => m.Casts).WithMany(c => c.Movies)
-            //    .UsingEntity<Dictionary<string, object>>("MovieCast",
-            //    m => m.HasOne<Cast>().WithMany().HasForeignKey("CastId"),
-            //    c => c.HasOne<Movie>().WithMany().HasForeignKey("MovieId"));
         }
         private void ConfigureReview(EntityTypeBuilder<Review> builder)
         {

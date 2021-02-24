@@ -11,5 +11,6 @@ namespace MovieShop.Core.ServiceInterfaces
     {
         Task<MovieDetailsResponseModel> GetMovieById(int id);
         Task<IEnumerable<MovieCardResponseModel>> GetTop25GrossingMovies();
+        Task<IEnumerable<ReviewResponseModel>> GetReviewsForMovie(int id);
     }
 }

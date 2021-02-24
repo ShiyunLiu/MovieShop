@@ -21,6 +21,11 @@ namespace MovieShop.Infrastructure.Services
             _cryptoService = cryptoService;
         }
 
+        public Task<bool> PurchaseMovie(PurchaseRequestModel purchaseRequest)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<bool> RegisterUser(UserRegisterRequestModel userRegisterRequestModel)
         {
             // we need to check whether that email exists or not
