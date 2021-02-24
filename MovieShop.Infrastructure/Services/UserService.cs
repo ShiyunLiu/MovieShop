@@ -71,6 +71,8 @@ namespace MovieShop.Infrastructure.Services
 
             var hashedPassword = _cryptoService.HashPassword(loginRequestModel.Password, dbUser.Salt);
 
+            // get the roles of that user and 
+
             if (hashedPassword == dbUser.HashedPassword)
             {
                 // User has entered correct password
@@ -81,7 +83,8 @@ namespace MovieShop.Infrastructure.Services
                     Email = dbUser.Email,
                     FirstName = dbUser.FirstName,
                     LastName = dbUser.LastName,
-                    DateOfBirth = dbUser.DateOfBirth
+                    DateOfBirth = dbUser.DateOfBirth,
+                    Roles = null
 
                 };
 

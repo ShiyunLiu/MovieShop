@@ -61,6 +61,7 @@ namespace MovieShop.MVC.Controllers
                 new Claim(ClaimTypes.Surname, user.LastName),
                 new Claim(ClaimTypes.DateOfBirth, user.DateOfBirth.Value.ToShortDateString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+               
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
