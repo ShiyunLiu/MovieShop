@@ -40,18 +40,44 @@ namespace MovieShop.Infrastructure.Services
 
         public string Email => throw new NotImplementedException();
 
-        public List<string> Roles => throw new NotImplementedException();
+        public IEnumerable<string> Roles => GetRoles();
+        private IEnumerable<string> GetRoles()
+        {
+            var claims = GetClaimsIdentity();
+            var roles = new List<string>();
+            foreach (var claim in claims)
+                if (claim.Type == ClaimTypes.Role)
+                    roles.Add(claim.Value);
+            return roles;
+        }
 
-        public bool IsAdmin => throw new NotImplementedException();
+        public bool IsAdmin => GetIsAdmin();
+        private bool GetIsAdmin()
+        {
+            var roles = Roles;
+            return roles.Any(r => r.Contains("Admin"));
+        }
 
-        public bool IsSuperAdmin => throw new NotImplementedException();
+        public bool IsSuperAdmin => GetIsSuperAdmin();
+        private bool GetIsSuperAdmin()
+        {
+            var roles = Roles;
+            return roles.Any(r => r.Contains("SuperAdmin"));
+        }
 
         public int UserId => GetUserId();
+
+        List<string> ICurrentLogedInUser.Roles => throw new NotImplementedException();
 
         private int GetUserId()
         {
             var userId = Convert.ToInt32(  _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier).Value);
             return userId;
+        }
+
+        public IEnumerable<Claim> GetClaimsIdentity()
+        {
+            return _httpContextAccessor.HttpContext?.User.Claims;
         }
     }
 }

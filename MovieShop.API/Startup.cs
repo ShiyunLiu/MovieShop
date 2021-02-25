@@ -45,6 +45,7 @@ namespace MovieShop.API
 
             services.AddTransient<IGenreService, GenreService>();
             services.AddTransient<IAsyncRepository<Genre>, EfRepository<Genre>>();
+            services.AddTransient<IAsyncRepository<Review>, EfRepository<Review>>();
 
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();

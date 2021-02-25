@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MovieShop.Infrastructure.Services;
 using MovieShop.Core.ServiceInterfaces;
+using MovieShop.Core.Models.Request;
 //using MovieShop.Core.Entities;
 //using MovieShop.Core.RepositoryInterfaces;
 //using MovieShop.Infrastructure.Repositories;
@@ -36,11 +37,14 @@ namespace MovieShop.MVC.Controllers
             return View(movieDetails);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Reviews(int id)
+        [HttpPost]
+        public async Task<IActionResult> CreateMovie(MovieCreateRequest movieCreateRequest)
         {
-            var movieReviews = await _movieService.GetReviewsForMovie(id);
-            return View(movieReviews);
+            if (ModelState.IsValid)
+            {
+                await _movieService.CreateMovie(movieCreateRequest);
+            }
+            return View();
         }
     }
 }

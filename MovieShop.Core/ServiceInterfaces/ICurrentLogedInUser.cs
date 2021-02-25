@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 
 namespace MovieShop.Core.ServiceInterfaces
@@ -13,5 +14,6 @@ namespace MovieShop.Core.ServiceInterfaces
         bool IsAdmin { get; }
         bool IsSuperAdmin { get; }
         int UserId { get; }
+        IEnumerable<Claim> GetClaimsIdentity();
     }
 }

@@ -21,6 +21,8 @@ namespace MovieShop.MVC.Controllers
             _movieService = movieService;
         }
 
+        // call this method when user clicks on Buy Movie in Movie details page
+        // Filters,
         [HttpGet]
         public async Task<IActionResult> BuyMovie(int id)
         {
@@ -34,17 +36,7 @@ namespace MovieShop.MVC.Controllers
             await _userService.PurchaseMovie(purchase);
             return Ok();
         }
-        // call this method when user clicks on Buy Movie in Movie details page
-        // Filters,
 
-       //[HttpGet]
-       //[Authorize]
-       // public async Task<IActionResult> BuyMovie(int id)
-       // {
-       //     var movie = await _movieService.GetMovieById(id);
-       //     // call uerService to save the movie that will call repository, that will save in Purchase Table
-       //     return View();
-       // }
 
     }
 }

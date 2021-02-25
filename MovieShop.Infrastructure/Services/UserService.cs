@@ -1,11 +1,13 @@
 ﻿using MovieShop.Core.Entities;
 using MovieShop.Core.Exceptions;
+using MovieShop.Core.Models;
 using MovieShop.Core.Models.Request;
 using MovieShop.Core.Models.Response;
 using MovieShop.Core.RepositoryInterfaces;
 using MovieShop.Core.ServiceInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,13 +17,63 @@ namespace MovieShop.Infrastructure.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly ICryptoService _cryptoService;
-        public UserService(IUserRepository userRepository, ICryptoService cryptoService)
+        private readonly IAsyncRepository<Review> _reviewRepository;
+        private readonly ICurrentLogedInUser _currentLogedInUser;
+        public UserService(IUserRepository userRepository, ICryptoService cryptoService, IAsyncRepository<Review> reviewRepository, ICurrentLogedInUser currentLogedInUser)
         {
             _userRepository = userRepository;
             _cryptoService = cryptoService;
+            _reviewRepository = reviewRepository;
+            _currentLogedInUser = currentLogedInUser;
         }
 
-        public Task<bool> PurchaseMovie(PurchaseRequestModel purchaseRequest)
+        public async Task AddMovieReview(ReviewRequestModel reviewRequest)
+        {
+            var movieReview = new Review
+            {
+                UserId = reviewRequest.UserId,
+                MovieId = reviewRequest.MovieId,
+                Rating = reviewRequest.Rating,
+                ReviewText = reviewRequest.ReviewText
+            };
+            await _reviewRepository.AddAsync(movieReview);
+        }
+
+        public async Task<IEnumerable<ReviewMovieResponseModel>> GetAllReviewsByUser(int id)
+        {
+            var reviews = await _reviewRepository.ListAsync(r => r.UserId == id);
+            var response = new List<ReviewMovieResponseModel>();
+            foreach (var movie in reviews)
+            {
+                response.Add(new ReviewMovieResponseModel
+                {
+                    UserId = movie.UserId,
+                    MovieId = movie.MovieId,
+                    Rating = movie.Rating,
+                    ReviewText = movie.ReviewText
+                });
+            }
+            return response;
+        }
+
+        public async Task<UserRegisterResponseModel> GetUserDetails(int id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+            {
+                return null;
+            }
+            var response = new UserRegisterResponseModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
+            return response;
+        }
+
+        public async Task<bool> PurchaseMovie(PurchaseRequestModel purchaseRequest)
         {
             throw new NotImplementedException();
         }
@@ -59,6 +111,7 @@ namespace MovieShop.Infrastructure.Services
             }
             return false;
         }
+
 
         public async Task<LoginResponseModel> ValidateUser(LoginRequestModel loginRequestModel)
         {

@@ -55,6 +55,7 @@ namespace MovieShop.Infrastructure.Repositories
             return false;
         }
 
+
         public virtual async Task<IEnumerable<T>> ListAllAsync()
         {
             return await _dbContext.Set<T>().ToListAsync();

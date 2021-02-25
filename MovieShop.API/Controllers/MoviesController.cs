@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace MovieShop.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]")] //attribute routing
     [ApiController]
-    public class MoviesController : ControllerBase
+    public class MoviesController : ControllerBase //inherits directly from ControllerBase instead of Controller since we don't need to return views in API Controllers
     {
         private readonly IMovieService _movieService;
 
@@ -30,12 +30,52 @@ namespace MovieShop.API.Controllers
             {
                 return NotFound("We did not find any movies");
             }
-            return Ok(movies);
+            return Ok(movies); // return JSON data by serialization
 
             // System.Text.Json in .NET Core 3
             // previous versions of .Net 1,2 and previous older .NET Framework Newtonsoft, 3rdy party library
             // Serialization , convert your C# objects in t JSON objetcs
             // De-Serialization, convert json objects to C#
+        }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetMovieById(int id)
+        {
+            var movie = await _movieService.GetMovieById(id);
+            if (movie != null)
+            {
+                return Ok(movie);
+            }
+            return NotFound("No Movies Found");
+        }
+
+        [HttpGet]
+        [Route("genre/{genreId:int}")]
+        public async Task<IActionResult> GetMoviesByGenre(int genreId)
+        {
+            var movies = await _movieService.GetMoviesByGenre(genreId);
+            if (movies != null)
+            {
+                return Ok(movies);
+            }
+            return NotFound("No Movies Found");
+        }
+
+        [HttpGet]
+        [Route("toprated")]
+        public async Task<IActionResult> GetTopRatedMovies()
+        {
+            var movies = await _movieService.GetTopRatedMovies();
+            return Ok(movies);
+        }
+
+        [HttpGet]
+        [Route("{id}/reviews")]
+        public async Task<IActionResult> GetMovieReviews(int id)
+        {
+            var reviews = await _movieService.GetReviewsForMovie(id);
+            return Ok(reviews);
         }
     }
 }
